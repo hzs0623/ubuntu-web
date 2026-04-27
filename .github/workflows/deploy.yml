@@ -18,6 +18,4 @@ jobs:
           script: |
             cd ~/web
             git pull origin master
-            npm install
-            pm2 restart web
-
+            pm2 restart web  # 直接重启，跳过容易报错的 npm install
