@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daes 的数字城堡</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px 60px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(20px);
+            animation: floatUp 1s ease-out forwards;
+        }
+        h1 { margin-bottom: 10px; font-size: 2.5em; }
+        p { font-size: 1.2em; color: #e0e0e0; line-height: 1.6; }
+        .tag {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 8px 15px;
+            background: #ff4757;
+            border-radius: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+        }
+        @keyframes floatUp {
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Daes's World! </h1>
+        <p>这是我亲手搭建的第一台 Ubuntu 云服务器。</p>
+        <p>从底层系统、Nginx 代理，到 Node.js 服务与 HTTPS 加密，</p>
+        <p>每一行配置都由我亲自掌控。</p>
+        <div class="tag">SECURE & FAST</div>
+    </div>
+</body>
+</html>
