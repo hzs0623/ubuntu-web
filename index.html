@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的个人主页 | daes</title>
-    <!-- 关键CSS内联优先，保证首屏极速 -->
-    <script src="https://cdn.tailwindcss.com" defer></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <title>daes | Personal Website</title>
     <style>
         * {
             margin: 0;
@@ -15,254 +12,333 @@
             scroll-behavior: smooth;
         }
 
-        body {
-            font-family: system-ui, sans-serif;
-            background: #050508;
-            color: #fff;
-            overflow-x: hidden;
+        :root {
+            --color-primary: #22d3ee;
+            --color-secondary: #a855f7;
+            --color-dark: #080812;
+            --color-glass: rgba(255, 255, 255, 0.06);
+            --border-glass: rgba(255, 255, 255, 0.12);
         }
 
-        /* 粒子容器 先占位，不渲染 */
-        #particles-js {
+        body {
+            font-family: "Segoe UI", Roboto, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            transition: background 0.8s ease;
+        }
+
+        /* ========== 暗黑主页 样式 ========== */
+        .page-main {
+            background: linear-gradient(135deg, #09091a, #0c0c20, #050510);
+            color: #f0f0f0;
+        }
+        .bg-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+            background-image: 
+                radial-gradient(circle at 20% 30%, var(--color-primary) 1px, transparent 1px),
+                radial-gradient(circle at 80% 20%, var(--color-secondary) 1px, transparent 1px),
+                radial-gradient(circle at 40% 70%, #ec4899 1px, transparent 1px);
+            background-size: 120px 120px;
+            animation: bgMove 20s linear infinite;
+        }
+        @keyframes bgMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 120px 120px; }
+        }
+
+        /* ========== 暧昧页面 样式 ========== */
+        .page-love {
+            background: linear-gradient(145deg, #ffe6f0, #f0e8ff, #ffeef8);
+            color: #b06892;
+        }
+        .love-box {
             position: fixed;
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
-            z-index: 0;
-            opacity: 0;
-            transition: opacity 1s ease;
+            z-index: 1;
+            pointer-events: none;
+            display: none;
+        }
+        .heart {
+            position: absolute;
+            color: #ff8fb3;
+            opacity: 0.6;
+            animation: floatUp 12s linear infinite;
+        }
+        @keyframes floatUp {
+            0% {bottom: -10%;transform: translateX(0) rotate(0deg);opacity: 0;}
+            20% {opacity: 0.7;}
+            80% {opacity: 0.5;}
+            100% {bottom: 105%;transform: translateX(60px) rotate(360deg);opacity: 0;}
+        }
+        @keyframes softBreath {
+            0% { filter: brightness(1) blur(0px); }
+            50% { filter: brightness(1.05) blur(1px); }
+            100% { filter: brightness(1) blur(0px); }
+        }
+        .page-love body {
+            animation: softBreath 6s ease-in-out infinite;
         }
 
-        .particles-ready {
-            opacity: 0.6 !important;
+        /* 共用布局 */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem 4rem;
+            z-index: 99;
+            transition: 0.3s ease;
+        }
+        nav.nav-blur {
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-glass);
+        }
+        .page-main .nav-blur {
+            background: rgba(8, 8, 18, 0.75);
+        }
+        .page-love .nav-blur {
+            background: rgba(255,255,255,0.25);
         }
 
-        .neon-text {
-            background: linear-gradient(90deg, #00f0ff, #7b2ffd, #ff2fd8);
+        .nav-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            animation: neon 3s ease-in-out infinite alternate;
         }
-
-        @keyframes neon {
-            0% { filter: drop-shadow(0 0 8px #00f0ff); }
-            100% { filter: drop-shadow(0 0 16px #7b2ffd); }
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .glass-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: #00f0ff;
-            box-shadow: 0 20px 40px rgba(0, 240, 255, 0.15);
-        }
-
-        .nav-fixed { transition: 0.3s all; }
-        .nav-scroll {
-            background: rgba(5,5,8,0.85);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.3);
-        }
-
-        .btn-glow {
-            position: relative;
-            overflow: hidden;
+        .nav-menu a {
+            text-decoration: none;
+            margin-left: 2rem;
             transition: 0.3s;
         }
-        .btn-glow::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0,240,255,0.2), transparent);
-            transition: 0.5s;
-        }
-        .btn-glow:hover::before {
-            left: 100%;
-        }
+        .page-main .nav-menu a {color: #ccc;}
+        .page-main .nav-menu a:hover {color: var(--color-primary);}
+        .page-love .nav-menu a {color: #c787ab;}
+        .page-love .nav-menu a:hover {color: #d86b9c;}
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 3px; }
-
-        /* 首屏强制可见，防止白屏 */
-        section {
+        .container {
             position: relative;
-            z-index: 10;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 4rem;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 7vw, 4.5rem);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, #fff, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.4));
+        }
+        .page-love .hero h1 {
+            background: linear-gradient(90deg, #d86b9c, #f8a5c2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: drop-shadow(0 0 8px rgba(255,140,180,0.3));
+        }
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+        .page-main .hero p {color: #a9a9c3;}
+        .page-love .hero p {color: #b06892;}
+
+        .btn-group {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn {
+            padding: 0.9rem 2.2rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .page-main .btn-outline {
+            border: 1px solid var(--color-primary);
+            color: var(--color-primary);
+            background: transparent;
+        }
+        .page-main .btn-outline:hover {
+            background: rgba(34, 211, 238, 0.15);
+            transform: translateY(-3px);
+        }
+        .page-main .btn-fill {
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            color: #fff;
+        }
+        .page-love .btn-fill {
+            background: linear-gradient(90deg, #f8a5c2, #d86b9c);
+            color: #fff;
+        }
+        .btn-fill:hover {
+            transform: translateY(-3px);
+        }
+
+        /* 内容区块默认隐藏，简化只留首页切换 */
+        section {display: none;}
+
+        .down-arrow {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 1.8s infinite;
+            font-size: 1.8rem;
+        }
+        .page-main .down-arrow {color: var(--color-primary);}
+        .page-love .down-arrow {color: #ff8fb3;}
+        @keyframes bounce {
+            0%,100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* 页面容器切换 */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div id="particles-js"></div>
-
-    <nav class="nav-fixed fixed w-full top-0 z-50 py-4 px-6 md:px-12">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold neon-text">MySpace</a>
-            <div class="hidden md:flex gap-8">
-                <a href="#home" class="hover:text-cyan-400 transition-colors">首页</a>
-                <a href="#about" class="hover:text-cyan-400 transition-colors">关于我</a>
-                <a href="#skill" class="hover:text-cyan-400 transition-colors">技能</a>
-                <a href="#contact" class="hover:text-cyan-400 transition-colors">联系</a>
-            </div>
-            <button class="md:hidden text-xl text-white">
-                <i class="fa fa-bars"></i>
-            </button>
-        </div>
-    </nav>
-
-    <section id="home" class="relative z-10 min-h-screen flex items-center justify-center px-6">
-        <div class="text-center">
-            <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold neon-text leading-tight">
-                Hello, I'm Me
-            </h1>
-            <p class="mt-6 text-gray-300 text-lg md:text-xl max-w-2xl mx-auto">
-                热爱开发 · 专注创造 · 追逐极致视觉与代码美学
-            </p>
-            <div class="mt-10 flex gap-4 justify-center flex-wrap">
-                <a href="#about" class="btn-glow px-8 py-3 border border-cyan-400 rounded-full text-cyan-400 hover:bg-cyan-400/10">
-                    了解更多
-                </a>
-                <a href="#contact" class="px-8 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full text-white">
-                    联系我
-                </a>
-            </div>
-            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
-                <i class="fa fa-angle-down text-2xl text-cyan-400"></i>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="relative z-10 py-20 px-6 md:px-12">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 neon-text">关于我</h2>
-            <div class="grid md:grid-cols-2 gap-10 items-center">
-                <div class="glass-card rounded-2xl p-8">
-                    <h3 class="text-2xl font-semibold mb-4">个人简介</h3>
-                    <p class="text-gray-300 leading-relaxed">
-                        一名热爱技术的开发者，喜欢前端、全栈开发与创意设计。
-                        追求简洁高效的代码，痴迷酷炫的视觉交互效果，
-                        擅长打造高颜值、高性能的网页与应用。
-                    </p>
-                </div>
-                <div class="glass-card rounded-2xl p-8">
-                    <h3 class="text-2xl font-semibold mb-4">兴趣爱好</h3>
-                    <ul class="text-gray-300 space-y-3">
-                        <li><i class="fa fa-code text-cyan-400 mr-2"></i> 代码开发</li>
-                        <li><i class="fa fa-paint-brush text-purple-400 mr-2"></i> 视觉设计</li>
-                        <li><i class="fa fa-gamepad text-pink-400 mr-2"></i> 科技数码</li>
-                        <li><i class="fa fa-plane text-blue-400 mr-2"></i> 旅行探索</li>
-                    </ul>
+    <!-- 暗黑主页 -->
+    <div class="page page-main active" id="mainPage">
+        <div class="bg-dot"></div>
+        <nav id="navbar">
+            <div class="nav-wrap">
+                <div class="logo">daes</div>
+                <div class="nav-menu">
+                    <a href="javascript:switchLove()">暧昧星球</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </nav>
 
-    <section id="skill" class="relative z-10 py-20 px-6 md:px-12 bg-black/20">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 neon-text">技能专长</h2>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="glass-card p-8 rounded-2xl text-center">
-                    <i class="fa fa-html5 text-4xl text-orange-400 mb-4"></i>
-                    <h4 class="text-xl font-semibold mb-2">前端开发</h4>
-                    <p class="text-gray-400">HTML/CSS/JS / Vue / React</p>
-                </div>
-                <div class="glass-card p-8 rounded-2xl text-center">
-                    <i class="fa fa-cogs text-4xl text-cyan-400 mb-4"></i>
-                    <h4 class="text-xl font-semibold mb-2">全栈能力</h4>
-                    <p class="text-gray-400">Node / 服务器部署 / 环境配置</p>
-                </div>
-                <div class="glass-card p-8 rounded-2xl text-center">
-                    <i class="fa fa-picture-o text-4xl text-purple-400 mb-4"></i>
-                    <h4 class="text-xl font-semibold mb-2">UI创意设计</h4>
-                    <p class="text-gray-400">渐变配色 / 玻璃拟态 / 赛博风</p>
+        <section id="home" class="hero">
+            <div class="container">
+                <h1>Hello, I'm daes</h1>
+                <p>热爱代码 · 原生手写 · 极简暗黑风<br>安静自由，保持独特</p>
+                <div class="btn-group">
+                    <button class="btn btn-outline" onclick="switchLove()">进入暧昧星球</button>
                 </div>
             </div>
-        </div>
-    </section>
+            <div class="down-arrow">↓</div>
+        </section>
+    </div>
 
-    <section id="contact" class="relative z-10 py-20 px-6 md:px-12">
-        <div class="max-w-7xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-16 neon-text">联系我</h2>
-            <div class="glass-card max-w-xl mx-auto p-10 rounded-2xl">
-                <div class="flex justify-center gap-6 text-3xl">
-                    <a href="#" class="text-gray-300 hover:text-cyan-400 transition-colors"><i class="fa fa-github"></i></a>
-                    <a href="#" class="text-gray-300 hover:text-pink-400 transition-colors"><i class="fa fa-weibo"></i></a>
-                    <a href="#" class="text-gray-300 hover:text-green-400 transition-colors"><i class="fa fa-wechat"></i></a>
-                    <a href="#" class="text-gray-300 hover:text-blue-400 transition-colors"><i class="fa fa-envelope"></i></a>
+    <!-- 暧昧页面 -->
+    <div class="page page-love" id="lovePage">
+        <div class="love-box" id="loveBox"></div>
+        <nav id="navbar2">
+            <div class="nav-wrap">
+                <div class="logo">daes</div>
+                <div class="nav-menu">
+                    <a href="javascript:switchMain()">返回主页</a>
                 </div>
-                <p class="mt-6 text-gray-400">欢迎交流 | 合作 | 技术探讨</p>
             </div>
-        </div>
-    </section>
+        </nav>
 
-    <footer class="relative z-10 py-6 text-center text-gray-500 border-t border-white/10">
-        <p>© 2026 My Personal Website | Made with ❤️ & Code</p>
-    </footer>
+        <section class="hero">
+            <div class="container">
+                <h1>予你温柔</h1>
+                <p>晚风很软，月色温柔<br>
+                世间所有细碎的美好<br>
+                都想悄悄分享给你</p>
+                <div class="btn-group">
+                    <button class="btn btn-fill" onclick="switchMain()">回到我的世界</button>
+                </div>
+            </div>
+        </section>
+    </div>
 
-    <!-- 关键优化：粒子JS 延迟懒加载，不阻塞首屏 -->
     <script>
-        // 页面完全加载完成后再加载粒子动画
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                // 动态加载 particles.js
-                const script = document.createElement('script');
-                script.src = "https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js";
-                script.onload = function() {
-                    // 加载完再初始化粒子
-                    particlesJS('particles-js', {
-                        particles: {
-                            number: { value: 80 },
-                            color: { value: "#00f0ff" },
-                            shape: { type: "circle" },
-                            opacity: { value: 0.5, random: true },
-                            size: { value: 3, random: true },
-                            line_linked: {
-                                enable: true,
-                                distance: 150,
-                                color: "#7b2ffd",
-                                opacity: 0.2,
-                                width: 1
-                            },
-                            move: {
-                                enable: true,
-                                speed: 2,
-                                direction: "none",
-                                random: true
-                            }
-                        },
-                        interactivity: {
-                            detect_on: "canvas",
-                            events: {
-                                onhover: { enable: true, mode: "grab" },
-                                onclick: { enable: true, mode: "push" }
-                            }
-                        },
-                        retina_detect: true
-                    });
-                    // 粒子渐入，不突兀
-                    document.getElementById('particles-js').classList.add('particles-ready');
-                };
-                document.body.appendChild(script);
-            }, 300);
+        // 切换页面
+        const mainPage = document.getElementById('mainPage');
+        const lovePage = document.getElementById('lovePage');
+        const loveBox = document.getElementById('loveBox');
+        let heartTimer = null;
 
-            // 导航栏滚动逻辑单独放，优先执行
-            window.addEventListener('scroll', () => {
-                const nav = document.querySelector('.nav-fixed');
-                if (window.scrollY > 50) {
-                    nav.classList.add('nav-scroll');
-                } else {
-                    nav.classList.remove('nav-scroll');
-                }
-            });
-        });
+        // 切暧昧页
+        function switchLove() {
+            mainPage.classList.remove('active');
+            lovePage.classList.add('active');
+            loveBox.style.display = 'block';
+            startHeart();
+        }
+
+        // 切回暗黑主页
+        function switchMain() {
+            lovePage.classList.remove('active');
+            mainPage.classList.add('active');
+            loveBox.style.display = 'none';
+            stopHeart();
+        }
+
+        // 原生爱心生成
+        const heartText = ['❤', '♥', '💗', '💖', '💘'];
+        function startHeart(){
+            heartTimer = setInterval(()=>{
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerText = heartText[Math.floor(Math.random() * heartText.length)];
+                let size = Math.random() * 20 + 12;
+                heart.style.fontSize = size + 'px';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                loveBox.appendChild(heart);
+                setTimeout(()=>heart.remove(),20000);
+            },800);
+        }
+        function stopHeart(){
+            clearInterval(heartTimer);
+        }
+
+        // 导航磨砂
+        window.addEventListener('scroll',function(){
+            if(window.scrollY > 80){
+                document.querySelectorAll('nav').forEach(el=>el.classList.add('nav-blur'));
+            }else{
+                document.querySelectorAll('nav').forEach(el=>el.classList.remove('nav-blur'));
+            }
+        })
     </script>
 </body>
 </html>
