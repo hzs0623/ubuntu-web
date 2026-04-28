@@ -18,5 +18,6 @@ Thumbs.db
 # 环境变量
 .env
 .env.local
-.env.development.localmonitor.db
+.env.development.local
+monitor.dbmonitor.db
 node_modules/
