@@ -15,9 +15,11 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 
-# 环境变量
+#             
+  环境变量
 .env
 .env.local
 .env.development.local
-monitor.dbmonitor.db
-node_modules/
+
+# 数据库
+monitor.db
