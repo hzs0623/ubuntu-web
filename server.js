@@ -5,6 +5,10 @@ const port = 3005;
 const expressRateLimit = require('express-rate-limit');
 const path = require('path');
 
+const monitor = require('./monitor');
+
+app.use('/monitor', monitor); // helmet before
+
 app.use(helmet()); // 开启所有的默认安全防护头！
 
 // limit one minute 100 num

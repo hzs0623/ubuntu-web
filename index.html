@@ -1,201 +1,103 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daes Home</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-        }
+ <!DOCTYPE html>                                                                                                                                                                                           
+  <html lang="zh">                                                                                                                                   
+  <head>                                                                                                                                                                                                  
+  <meta charset="UTF-8">                                                                                                                                                                                  
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Daes.fun</title>                                                                                                                                                                                   
+  <style>
+  *{margin:0;padding:0;box-sizing:border-box}                                                                                                                                                               
+  body{background:#020817;color:#e2e8f0;font-family:'Courier New',monospace;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}                                            
+  canvas{position:fixed;top:0;left:0;z-index:0}                                                                                                                                                             
+  .wrap{position:relative;z-index:1;text-align:center;padding:20px}                                                                                                                                         
+  .tag{color:#4ade80;font-size:14px;margin-bottom:16px;opacity:0;animation:fi 0.5s ease 0.5s forwards}                                                                                                      
+  .name{font-size:80px;font-weight:700;background:linear-gradient(135deg,#6366f1,#8b5cf6,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;o
+  pacity:0;animation:su 0.8s ease 0.8s forwards}                                                                                                                                                            
+  .sub{font-size:13px;color:#475569;letter-spacing:4px;text-transform:uppercase;margin-bottom:40px;opacity:0;animation:fi 0.5s ease 1.2s forwards}                                                          
+  .typing{font-size:14px;color:#4ade80;height:22px;margin-bottom:40px;opacity:0;animation:fi 0.5s ease 1.5s forwards}                                                                                       
+  .cur{display:inline-block;width:8px;height:14px;background:#4ade80;animation:blink 1s step-end infinite;vertical-align:middle;margin-left:2px}                                                            
+  .btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fi 0.5s ease 2s forwards}                                                                                           
+  .btn{padding:11px 28px;border-radius:8px;font-size:13px;font-family:'Courier New',monospace;cursor:pointer;text-decoration:none;transition:all                                                            
+  0.3s;display:flex;align-items:center;gap:8px;letter-spacing:1px}                                                                                                                                          
+  .bp{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none}                                                                                                                            
+  .bp:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(99,102,241,0.4)}                                                                                                                         
+  .bo{background:transparent;color:#94a3b8;border:1px solid #1e293b}                                                                                                                                        
+  .bo:hover{border-color:#6366f1;color:#a5b4fc;transform:translateY(-3px)}                                                                                                                                  
+  .bar{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:28px;opacity:0;animation:fi 0.5s ease 2.5s forwards;white-space:nowrap}                                              
+  .si{display:flex;align-items:center;gap:6px;font-size:11px;color:#334155}                                                                                                                                 
+  .dot{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 2s ease infinite}                                                                                                          
+  .dot.b{background:#3b82f6;animation-delay:.7s}                                                                                                                                                            
+  .dot.c{background:#8b5cf6;animation-delay:1.4s}                                                                                                                                                           
+  @keyframes fi{to{opacity:1}}                                                                                                                                                                              
+  @keyframes su{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}                                                                                                            
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}                                                                                                                                                        
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}                                                                                                              
+  @media(max-width:500px){.name{font-size:52px}.bar{gap:14px}}                                                                                                                                              
+  </style>                                                                                                                                                                                                  
+  </head>                                                                                                                                                                                                   
+  <body>                                                                                                                                                                                                    
+  <canvas id="c"></canvas>                                                                                                                                                                                  
+  <div class="wrap">                                                                                                                                                                                      
+    <div class="tag">~/daes.fun $</div>                                                                                                                                                                   
+    <div class="name">Daes</div>                                                                                                                                                                            
+    <div class="sub">Personal Server &middot; Hong Kong</div>                                                                                                                                               
+    <div class="typing"><span id="typed"></span><span class="cur"></span></div>                                                                                                                             
+    <div class="btns">                                                                                                                                                                                      
+      <a href="/monitor" class="btn bp">&#9646;&#9646; 服务器监控</a>                                                                                                                                       
 
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-            min-height: 100vh;
-            color: #2d3748;
-        }
-
-        /* 导航栏 */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 8%;
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
-            position: sticky;
-            top: 0;
-            z-index: 99;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2563eb;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #4a5568;
-            margin-left: 2rem;
-            transition: 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            color: #2563eb;
-        }
-
-        /* 主容器 */
-        .container {
-            padding: 6rem 8%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 3.2rem;
-            margin-bottom: 1.2rem;
-            background: linear-gradient(90deg, #2563eb, #4f46e5);
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        .desc {
-            font-size: 1.1rem;
-            color: #64748b;
-            max-width: 600px;
-            line-height: 1.8;
-            margin-bottom: 2.5rem;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.9rem 2.2rem;
-            border-radius: 50px;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: #2563eb;
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            background: #1d4ed8;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #2563eb;
-            color: #2563eb;
-        }
-
-        .btn-outline:hover {
-            background: #2563eb;
-            color: #fff;
-            transform: translateY(-3px);
-        }
-
-        /* 卡片区域 */
-        .cards {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 5rem;
-        }
-
-        .card {
-            background: #fff;
-            padding: 2.2rem 1.5rem;
-            border-radius: 16px;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.05);
-            transition: 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
-        }
-
-        .card h3 {
-            margin: 1rem 0;
-            color: #1e293b;
-        }
-
-        .card p {
-            color: #64748b;
-            line-height: 1.7;
-        }
-
-        /* 底部 */
-        footer {
-            text-align: center;
-            padding: 3rem 0;
-            color: #94a3b8;
-            font-size: 0.95rem;
-        }
-    </style>
-</head>
-<body>
-    <!-- 导航 -->
-    <nav>
-        <div class="logo">NicePage</div>
-        <div class="nav-menu">
-            <a href="#">首页</a>
-            <a href="#">功能</a>
-            <a href="#">关于</a>
-            <a href="#">联系</a>
-        </div>
-    </nav>
-
-    <!-- 主体 -->
-    <div class="container">
-        <h1>简约 · 精致 · 现代设计</h1>
-        <p class="desc">
-            采用柔和渐变、毛玻璃导航、悬浮动效、自适应布局，
-            干净高级的视觉体验，适配手机、平板、电脑所有设备。
-        </p>
-        <div class="btn-group">
-            <button class="btn btn-primary">立即开始</button>
-            <button class="btn btn-outline">了解更多</button>
-        </div>
-
-        <!-- 卡片模块 -->
-        <div class="cards">
-            <div class="card">
-                <h3>极致简洁</h3>
-                <p>去除冗余元素，专注内容本身，视觉舒适不杂乱。</p>
-            </div>
-            <div class="card">
-                <h3>流畅动画</h3>
-                <p>悬浮、上浮、渐变过渡，交互体验丝滑自然。</p>
-            </div>
-            <div class="card">
-                <h3>全端适配</h3>
-                <p>自动适配手机、平板、桌面，任意屏幕完美展示。</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- 底部 -->
-    <footer>
-        © 2026 NicePage · 简约高颜值网页设计
-    </footer>
-</body>
-</html>
+    </div>                                                                                                                                                                                                  
+  </div>                                                                                                                                                                                                    
+  <div class="bar">                                                                                                                                                                                         
+    <div class="si"><div class="dot"></div>Hysteria2 Online</div>                                                                                                                                           
+    <div class="si"><div class="dot b"></div>Shadowsocks Online</div>                                                                                                                                       
+    <div class="si"><div class="dot c"></div>HongKong · BGP</div>                                                                                                                                           
+  </div>                                                                                                                                                                                                    
+  <script>                                                                                                                                                                                                  
+  var c=document.getElementById('c'),ctx=c.getContext('2d');                                                                                                                                                
+  var W=c.width=window.innerWidth,H=c.height=window.innerHeight;                                                                                                                                            
+  window.onresize=function(){W=c.width=window.innerWidth;H=c.height=window.innerHeight};                                                                                                                  
+  var N=90,ps=[];                                                                                                                                                                                           
+  for(var i=0;i<N;i++) ps.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.6,vy:(Math.random()-.5)*.6,r:Math.random()*1.5+.5});                                                             
+  function draw(){                                                                                                                                                                                          
+    ctx.clearRect(0,0,W,H);                                                                                                                                                                                 
+    for(var i=0;i<N;i++){                                                                                                                                                                                   
+      var p=ps[i];                                                                                                                                                                                          
+      p.x+=p.vx; p.y+=p.vy;                                                                                                                                                                               
+      if(p.x<0||p.x>W) p.vx*=-1;                                                                                                                                                                            
+      if(p.y<0||p.y>H) p.vy*=-1;                                                                                                                                                                            
+      ctx.beginPath();                                                                                                                                                                                      
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);                                                                                                                                                                     
+      ctx.fillStyle='rgba(99,102,241,0.5)';                                                                                                                                                                 
+      ctx.fill();                                                                                                                                                                                           
+      for(var j=i+1;j<N;j++){                                                                                                                                                                               
+        var dx=p.x-ps[j].x,dy=p.y-ps[j].y,d=Math.sqrt(dx*dx+dy*dy);                                                                                                                                         
+        if(d<130){                                                                                                                                                                                          
+          ctx.beginPath();                                                                                                                                                                                  
+          ctx.moveTo(p.x,p.y);                                                                                                                                                                              
+          ctx.lineTo(ps[j].x,ps[j].y);                                                                                                                                                                      
+          ctx.strokeStyle='rgba(99,102,241,'+(1-d/130)*.12+')';                                                                                                                                           
+          ctx.lineWidth=.5;                                                                                                                                                                                 
+          ctx.stroke();                                                                                                                              
+        }                                                                                                                                                                                                   
+      }                                                                                                                                                                                                   
+    }                                                   
+    requestAnimationFrame(draw);                                                                                                                                                                            
+  }
+  draw();                                                                                                                                                                                                   
+  var lines=['Hello World!','Passionate about tech & code.','Building things on the internet.','Based in Shenzhen, China.'];                         
+  var li=0,ci=0,del=false,el=document.getElementById('typed');                                                                                                                                              
+  function type(){                                                                                                                                                                                          
+    var t=lines[li];                                                                                                                                                                                        
+    if(!del){                                                                                                                                                                                               
+      el.textContent=t.slice(0,++ci);                                                                                                                                                                       
+      if(ci===t.length){del=true;setTimeout(type,2000);return;}                                                                                                                                           
+      setTimeout(type,80);                                                                                                                                                                                  
+    } else {                                                                                                                                         
+      el.textContent=t.slice(0,--ci);                                                                                                                                                                       
+      if(ci===0){del=false;li=(li+1)%lines.length;setTimeout(type,400);return;}                                                                                                                             
+      setTimeout(type,40);                                                                                                                                                                                  
+    }                                                                                                                                                                                                       
+  }                                                                                                                                                                                                         
+  setTimeout(type,2200);                                                                                                                                                                                    
+  </script>                                                                                                                                                                                               
+  </body>                                                                                                                                                                                                   
+  </html>          
